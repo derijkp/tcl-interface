@@ -60,6 +60,7 @@ proc interface::test {description script expected args} {
 	upvar interface interface
 	upvar version version
 	upvar opt opt
+	if {![info exists testleak]} {set testleak 0}
 	foreach arg $args {set options($arg) 1}
 	set name $interface-$version
 	set conditions [array names options {skipon *}]
@@ -151,6 +152,9 @@ proc interface::testsummarize {} {
 			append error "\n$errormessage"
 		}
 		# display $error
+		if {[info exists skipped]} {
+			append error "\n***********************\nskipped [llength $skipped]"
+		}
 		return -code error $error
 	} elseif {[info exists skipped]} {
 		set result "All tests ok (skipped [llength $skipped])"

@@ -1,14 +1,12 @@
 '\"
-'\" Generated from doc/xml/interface.n.xml
+'\" Generated from docs/xml/interface.n.xml
 '\"
 .so man.macros
-.TH interface n "" Tcl ""
+.TH interface n "" interface ""
 .BS
 .SH NAME
 interface \- how to use interfaces
 .SH SYNOPSIS
-
-
 .nf
 \&\fBinterface\fP \fIoption\fR ?\fIarg arg ...\fR?
 .fi
@@ -24,8 +22,7 @@ in the same way. In order to let objects easily communicate with each other they
 able to find out the others functionality.
 .PP
 
-An interface is a set of (related) methods that provide a predefined 
-functionality.
+An interface is a set of (related) methods that provide a predefined functionality.
 An object implements an interface if it supports all the methods in the interface the proper way.
 Of course, one object can support multiple interfaces. It must advertise the interfaces it 
 supports via the "interface" method which has the following form

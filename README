@@ -29,10 +29,10 @@ You should be able to obtain the latest version of interface via www on url
 http://rrna.uia.ac.be/interface/ or via anonymous ftp
 on rrna.uia.ac.be. in the directory /pub/tcl
 
-Usually you can build the binaries and install the package using the following steps:
-cd to the interface directory
-cd build
+Compiled packages should be created using the following steps in the package directory:
+(You can also build in any other directory, if you change the path to the configure command)
 ./configure
+make
 make install
 
 The configure command has several options that can be examined using
@@ -59,7 +59,7 @@ web: http://rrna.uia.ac.be/~peter/personal/peter.html
 Legalities
 ----------
 
-interface is Copyright Peter De Rijk, University of Antwerp (UIA), 2001
+interface is Copyright Peter De Rijk, University of Antwerp (UIA), 2000
 The following terms apply to all files associated with the software unless 
 explicitly disclaimed in individual files.
 

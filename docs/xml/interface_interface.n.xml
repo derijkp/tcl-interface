@@ -6,7 +6,7 @@
 
 <section>
 <title>DESCRIPTION</title>
-An interface (see <ref>interface(n)</ref>) is defined by a compound command (an object) in the interfaces namespace 
+An interface (see <ref>interface</ref>) is defined by a compound command (an object) in the interfaces namespace 
 with a name consisting of the name of the interface and its version number.
 This interface defining object must support the "interface" interface, that basically includes
 returning information about the interface and testing it.

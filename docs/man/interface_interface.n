@@ -1,14 +1,14 @@
 '\"
-'\" Generated from doc/xml/interface_interface.n.xml
+'\" Generated from docs/xml/interface_interface.n.xml
 '\"
 .so man.macros
-.TH interface_interface n "" Tcl ""
+.TH interface_interface n "" interface ""
 .BS
 .SH NAME
 interface_interface \- description of the "interface" interface
 .BE
 .SH DESCRIPTION
-An interface (see interface(n)) is defined by a compound command (an object) in the interfaces namespace
+An interface (see interface) is defined by a compound command (an object) in the interfaces namespace
 with a name consisting of the name of the interface and its version number.
 This interface defining object must support the "interface" interface, that basically includes
 returning information about the interface and testing it.
