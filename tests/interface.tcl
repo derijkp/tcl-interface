@@ -7,7 +7,7 @@ package require interface
 
 interface testclear
 
-interface test interface-0.1 interfaces::interface-0.1 \
-	-interface interface -version 0.1
+interface test interface-$::interface::version interfaces::interface-$::interface::version \
+	-interface interface -version $::interface::version
 
 interface testsummarize

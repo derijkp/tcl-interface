@@ -1,7 +1,8 @@
 package require interface
 
-proc ::interfaces::interface-0.1 {option args} {
-	interface::implement interface 0.1 [file join $::interface::dir doc xml interface_interface.n.xml] {
+# $Format: "proc ::interfaces::interface-0.$ProjectMajorVersion$ {option args} {"$
+proc ::interfaces::interface-0.8 {option args} {
+	interface::implement interface $::interface::version [file join $::interface::dir doc xml interface_interface.n.xml] {
 		-interface notdefined
 		-version notdefined
 		-testtest 1
@@ -9,9 +10,9 @@ proc ::interfaces::interface-0.1 {option args} {
 		-testoptions notdefined
 	} $option $args
 
-	# test should never be tested for interfaces::interface-0.1, otherwise we'll end up
+	# test should never be tested for interfaces::interface-$::interface::version, otherwise we'll end up
 	# in andless recursion
-	if {[string equal $object interfaces::interface-0.1]} {
+	if {[string equal $object interfaces::interface-$::interface::version]} {
 		set opt(-testtest) 0
 	}
 	if {$opt(-testtest)} {
