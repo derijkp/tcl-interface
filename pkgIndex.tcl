@@ -1,4 +1,4 @@
-# $Format: "package ifneeded interface 0.$ProjectMajorVersion$ \\"$
+# $Format: "package ifneeded interface 0.8$ProjectMajorVersion$ \\"$
 package ifneeded interface 0.8 \
 [subst -nocommands {
 	namespace eval ::interface {}

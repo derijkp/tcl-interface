@@ -202,7 +202,7 @@ binaries: $(BINARIES) pkgIndex.tcl
 libraries:
 
 doc:
-		$(TCLSH_PROG) $(srcdir)/build/makedoc.tcl
+	$(TCLSH_PROG) $(srcdir)/build/makedoc.tcl
 	
 
 uninstall:
