@@ -8,4 +8,4 @@ namespace eval ::interface {}
 set ::interface::dir $dir
 source [file join $dir lib interface.tcl]
 lappend auto_path [file join $dir lib]
-extension provide interface 0.8.9
+extension provide interface 1.0.0

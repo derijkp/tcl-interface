@@ -1,8 +1,8 @@
 package require interface
 
-# $Format: "proc ::interfaces::interface-0.$ProjectMajorVersion$ {option args} {"$
-proc ::interfaces::interface-0.8 {option args} {
-	interface::implement interface $::interface::version [file join $::interface::dir doc xml interface_interface.n.xml] {
+# $Format: "proc ::interfaces::interface-$ProjectMajorVersion$.$ProjectMinorVersion$ {option args} {"$
+proc ::interfaces::interface-1.0 {option args} {
+	interface::implement interface $::interface::version [file join $::interface::dir doc xml interface_interface.xml] {
 		-interface notdefined
 		-version notdefined
 		-testtest 1

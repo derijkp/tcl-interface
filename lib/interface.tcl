@@ -1,7 +1,7 @@
 namespace eval interface {}
 namespace eval interfaces {}
-# $Format: "set ::interface::version 0.$ProjectMajorVersion$"$
-set ::interface::version 0.8
+# $Format: "set ::interface::version $ProjectMajorVersion$.$ProjectMinorVersion$"$
+set ::interface::version 1.0
 package provide interface $::interface::version
 
 namespace eval interfaces {}

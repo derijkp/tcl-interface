@@ -1,5 +1,5 @@
-# $Format: "package ifneeded interface 0.8$ProjectMajorVersion$ \\"$
-package ifneeded interface 0.8 \
+# $Format: "package ifneeded interface $ProjectMajorVersion$.$ProjectMinorVersion$ \\"$
+package ifneeded interface 1.0 \
 [subst -nocommands {
 	namespace eval ::interface {}
 	set ::interface::dir [list $dir]
