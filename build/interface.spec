@@ -5,8 +5,8 @@ Release:	1
 Copyright:	BSD
 Group:	Development/Languages/Tcl
 Source:	interface-0.8.1.src.tar.gz
-URL: http://rrna.uia.ac.be/interface
-Packager: Peter De Rijk <derijkp@uia.ua.ac.be>
+URL: http://tcl-dbi.sourceforge.net/interface
+Packager: Peter De Rijk <Peter.DeRijk@ua.ac.be>
 Requires: tcl >= 8.3.2
 Prefix: /usr
 %description
