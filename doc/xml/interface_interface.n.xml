@@ -6,16 +6,12 @@
 
 <section>
 <title>DESCRIPTION</title>
-<p>
 An interface (see <ref>interface(n)</ref>) is defined by a compound command (an object) in the interfaces namespace 
 with a name consisting of the name of the interface and its version number.
 This interface defining object must support the "interface" interface, that basically includes
 returning information about the interface and testing it.
-</p>
-<p>
-The interface package contains some commands (see <ref>interface::implement(n)</ref>) to easily 
+The interface package contains some commands to easily 
 implement interfaces in Tcl.
-</p>
 </section>
 
 <section>
@@ -29,10 +25,22 @@ implement interfaces in Tcl.
 <commanddef>
 <command><cmd>objectName</cmd> <method>test</method> <m>objectName</m> ?<m>options</m>?</command>
 <desc>Test whether the given object <m>objectName</m> fully supports the interface.
-The command usually puts information about tests being conducted to stdout. The command must return 
-an error if one or more of the tests failed. The <m>options</m> depend completely on the interface 
+The <m>options</m> depend completely on the interface 
 being tested, and can be used to provide necessary parameters or to allow the exclusion of 
 certain tests. Some of these options can be mandatory.
+The command should put information about tests being conducted to stdout. The command must return 
+the number of tests that failed. errors should be logged using the interface::logerror command,
+and skipped tests with the interface::logskip command:
+<commandlist>
+<commanddef>
+<command><cmd>interface::logerror</cmd> <m>interface</m> <m>description</m> <m>errormessage</m></command>
+<desc>log an error for a test for the given <m>interface</m></desc>
+</commanddef>
+<commanddef>
+<command><cmd>interface::logskip</cmd> <m>interface</m> <m>description</m> <m>condition</m></command>
+<desc>log a skipped test for the given <m>interface</m></desc>
+</commanddef>
+</commandlist>
 </desc>
 </commanddef>
 </commandlist>
@@ -40,7 +48,6 @@ certain tests. Some of these options can be mandatory.
 
 <seealso>
 <ref>interface</ref>
-<ref>interface::implement</ref>
 </seealso>
 
 

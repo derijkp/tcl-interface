@@ -51,14 +51,26 @@ proc interface::display {e} {
 	puts $e
 }
 
-proc interface::test {description script expected {causeerror 0} args} {
+proc interface::test {description script expected args} {
 	variable errors
+	variable skipped
 	variable testleak
 	upvar object object
 	upvar interface interface
 	upvar version version
 	upvar opt opt
+	foreach arg $args {set options($arg) 1}
 	set name $interface-$version
+	set conditions [array names options {skipon *}]
+	if {[llength $conditions]} {
+		foreach condition $conditions {
+			if {[expr [lindex $condition 1]]} {
+				logskip $name $description $condition
+				return
+			}
+		}
+	}
+	if {[info exists options(error)]} {set causeerror 1} else {set causeerror 0}
 	set e "testing $name: $description"
 	if ![info exists ::env(TCL_TEST_ONLYERRORS)] {display $e}
 	set code "upvar object object\nupvar interface interface\nupvar version version\nupvar opt opt\n"
@@ -68,32 +80,37 @@ proc interface::test {description script expected {causeerror 0} args} {
 	if $causeerror {
 		if !$error {
 			if [info exists ::env(TCL_TEST_ONLYERRORS)] {display "-- test $name: $description --"}
-			set e "test should cause an error\nresult is \n$result"
-			display $e
-			lappend errors "$name:$description" "test should cause an error\nresult is \n$result"
+			logerror $name $description "test should cause an error\nresult is \n$result"
 			return
 		}	
 	} else {
 		if $error {
 			if [info exists ::env(TCL_TEST_ONLYERRORS)] {display "-- test $name: $description --"}
-			set e "test caused an error\nerror is \n$result\n"
-			display $e
-			lappend errors "$name:$description" "test caused an error\nerror is \n$result\n"
+			logerror $name $description "test caused an error\nerror is \n$result\n"
 			return
 		}
 	}
-	if {"$result"!="$expected"} {
-		if [info exists ::env(TCL_TEST_ONLYERRORS)] {display "-- test $name: $description --"}
-		set e "error: result is:\n$result\nshould be\n$expected"
-		display $e
-		lappend errors "$name:$description" $e
+	
+	if {[info exists options(regexp)]} {
+		set compar [regexp $expected $result]
+		set errorbetween {should match (regexp)}
+	} elseif {[info exists options(match)]} {
+		set compar [string match $expected $result]
+		set errorbetween {should match}
+	} else {
+		set compar [expr {"$result"=="$expected"}]
+		set errorbetween {should be}
+	}
+	if {!$compar} {
+		if [info exists ::env(TCL_TEST_ONLYERRORS)] {display "-- test $f: $description --"}
+		logerror $name $description "error: result is:\n$result\n$errorbetween\n$expected"
 	}
 	if $testleak {
 		set line1 [lindex [split [exec ps l [pid]] "\n"] 1]
 		time {set error [catch {tools__try $object} result]} $testleak
 		set line2 [lindex [split [exec ps l [pid]] "\n"] 1]
 		if {([lindex $line1 6] != [lindex $line2 6])||([lindex $line1 7] != [lindex $line2 7])} {
-			if {"$args" != "noleak"} {
+			if {![info exists options(noleak)]} {
 				if [info exists ::env(TCL_TEST_ONLYERRORS)] {display "-- test $name: $description --"}
 				puts "possible leak:"
 				puts $line1
@@ -105,8 +122,21 @@ proc interface::test {description script expected {causeerror 0} args} {
 	return
 }
 
+proc interface::logerror {interface description errormessage} {
+	variable errors
+	display $errormessage
+	lappend errors [list $interface $description $errormessage]
+}
+
+proc interface::logskip {interface description condition} {
+	variable skipped
+	display "** skipped $interface: $description ([lindex $condition 1])"
+	lappend skipped [list $interface $description $condition]
+}
+
 proc interface::testsummarize {} {
 	variable errors
+	variable skipped
 	if [info exists errors] {
 		global currenttest
 		if [info exists currenttest] {
@@ -114,49 +144,31 @@ proc interface::testsummarize {} {
 		} else {
 			set error "***********************\nThere were errors in the tests"
 		}
-		foreach {test err} $errors {
-			append error "\n$test  ----------------------------"
-			append error "\n$err"
+		foreach line $errors {
+			foreach {interface descr errormessage} $line break
+			append error "\n$interface: $descr  ----------------------------"
+			append error "\n$errormessage"
 		}
 		# display $error
 		return -code error $error
-		unset errors
+	} elseif {[info exists skipped]} {
+		set result "All tests ok (skipped [llength $skipped])"
 	} else {
-		puts "All tests ok"
-		return "All tests ok"
+		set result "All tests ok"
 	}
+	puts $result
+	return $result
 }
 
-proc interface::starttest {} {
+proc interface::testend {} {
 	variable errors
-	variable testleak
-	catch {unset errors}
-	
-	if $testleak {
-		test test {initialise all memory for testing with leak detection} {
-			set try 1
-		} 1 0 noleak
+	variable skipped
+	if [info exists errors] {
+		return [llength $errors]
+	} else {
+		return 0
 	}
 }
-
-#proc ::interface::options {name list} {
-#	variable options
-#	set knowns ""
-#	foreach {variable key default} $list {
-#		variable $variable
-#		lappend knowns $key
-#		if {[info exists options($key)]} {
-#			set $variable $options($key)
-#			unset options($key)
-#		} else {
-#			set $variable $default
-#		}
-#	}
-#	set unknowns [array names options]
-#	if {[llength $unknowns]} {
-#		error "unknown options [join $unknowns ,] for testing interface $name: must be one or more of [join $knowns ,]"
-#	}
-#}
 
 proc interface::implement {interface version docfile options cmd arg} {
 	switch $cmd {
@@ -179,13 +191,11 @@ proc interface::implement {interface version docfile options cmd arg} {
 			}
 		}
 		test {
-			variable errors
 			variable testleak
 			upvar opt opt
 			upvar object object
 			upvar interfaces interfaces
 			array set opt $options
-			catch {unset errors}
 			set len [llength $arg]
 			if {$len < 1} {
 				error "wrong # args: should be \"interfaces::$interface-$version test object ?options?\""
@@ -203,10 +213,6 @@ proc interface::implement {interface version docfile options cmd arg} {
 		}
 	}
 }
-
-proc ::interface::doc {args} {
-}
-
 
 proc ::interface::getcmd {interface} {
 	if {![string equal [info commands ::interfaces::$interface] ""]} {
@@ -244,8 +250,8 @@ proc interface::interface {cmd args} {
 			return [array names interfaces]
 		}
 		versions {
-			if {$len != !} {
-				error "wrong # args: should be \"interface list interface\""
+			if {$len != 1} {
+				error "wrong # args: should be \"interface versions interface\""
 			}
 			set list {}
 			foreach el [::interface::interface list $interface-*] {
@@ -268,6 +274,20 @@ proc interface::interface {cmd args} {
 			set object [lindex $args 1]
 			set ifcmd [::interface::getcmd $interface]
 			eval $ifcmd test $object [lrange $args 2 end]
+		}
+		testclear {
+			variable error
+			variable skip
+			catch {unset error}
+			catch {unset skip}
+			return
+		}
+		testsummarize {
+			if {$len == 1} {
+				error "wrong # args: should be \"interface testsummarize\""
+			}
+			set code [catch {::interface::testsummarize} result]
+			return -code $code $result
 		}
 	}
 }

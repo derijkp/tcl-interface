@@ -32,7 +32,7 @@ proc ::interfaces::interface-0.1 {option args} {
 
 	interface::test {interface error} {
 		$object interface test-12134
-	} "$object does not support interface test-12134" 1
+	} "$object does not support interface test-12134" error
 
 	interface::test {interface list} {
 		upvar interface interface
@@ -56,6 +56,5 @@ proc ::interfaces::interface-0.1 {option args} {
 			$object test {$opt(-testobject)} $opt(-testoptions)
 		} {All tests ok}
 	}
-
-	interface::testsummarize
+	interface::testend
 }

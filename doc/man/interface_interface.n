@@ -1,0 +1,41 @@
+'\"
+'\" Generated from doc/xml/interface_interface.n.xml
+'\"
+.so man.macros
+.TH interface_interface n "" Tcl ""
+.BS
+.SH NAME
+interface_interface \- description of the "interface" interface
+.BE
+.SH DESCRIPTION
+An interface (see interface(n)) is defined by a compound command (an object) in the interfaces namespace
+with a name consisting of the name of the interface and its version number.
+This interface defining object must support the "interface" interface, that basically includes
+returning information about the interface and testing it.
+The interface package contains some commands to easily
+implement interfaces in Tcl.
+.SH "THE INTERFACE INTERFACE"
+.TP
+\&\fB\fBobjectName\fP \fBdoc\fP
+\&\fRReturns the documentation of the interface in XML format (TMML).
+.TP
+\&\fB\fBobjectName\fP \fBtest\fP \fIobjectName\fB ?\fIoptions\fB?
+\&\fRTest whether the given object \fIobjectName\fR fully supports the interface.
+The \fIoptions\fR depend completely on the interface
+being tested, and can be used to provide necessary parameters or to allow the exclusion of
+certain tests. Some of these options can be mandatory.
+The command should put information about tests being conducted to stdout. The command must return
+the number of tests that failed. errors should be logged using the interface::logerror command,
+and skipped tests with the interface::logskip command:
+.RS
+.TP
+\&\fB\fBinterface::logerror\fP \fIinterface\fB \fIdescription\fB \fIerrormessage\fB
+\&\fRlog an error for a test for the given \fIinterface\fR
+.TP
+\&\fB\fBinterface::logskip\fP \fIinterface\fB \fIdescription\fB \fIcondition\fB
+\&\fRlog a skipped test for the given \fIinterface\fR
+.RE
+.SH "SEE ALSO"
+interface
+.SH KEYWORDS
+interface, interface_interface
