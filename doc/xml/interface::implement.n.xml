@@ -1,0 +1,96 @@
+<manpage package="interface" title="interface::implement" id="interface::implement" cat="cmd">
+<namesection>
+<name>interface::implement</name>
+<name>interface::test</name>
+<name>interface::testsummarize</name>
+<desc>easy implementation of interfaces in Tcl</desc>
+</namesection>
+
+<synopsis>
+<syntax>
+proc ::interfaces::<m>interfaceName</m>-<m>version</m> {option args} {
+	<cmd>interface::implement</cmd> <m>interfaceName</m> <m>interfaceVersion</m> <m>options</m> $cmd $args
+	<cmd>interface::test</cmd> <m>desription</m> <m>script</m> <m>result</m> <m>?error?</m>
+	...
+	<cmd>interface::testsummarize</cmd>
+}
+</syntax>
+</synopsis>
+
+<section>
+<title>DESCRIPTION</title>
+<p>The <ref>interface</ref> package includes several Tcl commands to easily create an interface
+defining object. Just use these as indicated in the synopsis.
+</p>
+</section>
+
+<section>
+<title>THE INTERFACE::IMPLEMENT COMMAND</title>
+<commandlist>
+<commanddef>
+<command><cmd>interface::implement</cmd> <m>interfaceName</m> <m>interfaceVersion</m> <m>docfile</m> <m>options</m> <m>cmd</m> <m>args</m></command>
+<desc>implements the basic interface interface. It checks the method called in 
+<m>cmd</m> and returns the appropriate answers to the basic interface methods. If 
+<m>cmd</m> is test, the proc does not return, and the rest of the proc (that contains 
+the tests) is executed. If you want extra options besides the basic interface methods, 
+you should check for these before calling interface::implement. <m>cmd</m> must 
+be the first argument given to the procedure.
+<m>interfaceName</m> and <m>interfaceVersion</m> are the name and the version of the 
+interface to be defined. They should be the same as the those used in the name of the 
+procedure. 
+<m>docfile</m> contains the filename of the xml (tmml) documentation of the interface
+<m>options</m> must be a list consisting of an even number of 
+elements. Each odd-numbered element in this list is treated as an option, and the 
+following element in list is used asdefault value for that option. The options 
+will be made available in the array opt. <m>args</m> contains the resulting arguments 
+given to the proc, and should contain any options set by the caller. 
+</desc>
+</commanddef>
+</commandlist>
+</section>
+
+<section>
+<title>THE INTERFACE::TEST COMMAND</title>
+<commandlist>
+<commanddef>
+<command><cmd>interface::test</cmd> <m>desription</m> <m>script</m> <m>result</m> <m>?error?</m></command>
+<desc>Test one feature of the interface by running the code in script. This code will have access to the 
+variables 
+<dl>
+<dle><dt>object</dt><dd>object being tested for complience to the interface</dd></dle>
+<dle><dt>opt</dt><dd>array containing options given to the proc</dd></dle>
+<dle><dt>interface</dt><dd>name of interface being tested</dd></dle>
+<dle><dt>version</dt><dd>version of interface being tested</dd></dle>
+</dl>
+</desc>
+</commanddef>
+</commandlist>
+</section>
+
+<section>
+<title>THE INTERFACE::TESTSUMMARISE COMMAND</title>
+<commandlist>
+<commanddef>
+<command><cmd>interface::testsummarize</cmd></command>
+<desc>should go at the end of the defining proc. Returns an error and an appropriate 
+error message if there were any errors.
+</desc>
+</commanddef>
+</commandlist>
+</section>
+
+<seealso>
+<ref>interface</ref>
+<ref>interface_interface</ref>
+</seealso>
+
+
+<keywords>
+<keyword>interface</keyword>
+<keyword>interface::implement</keyword>
+<keyword>interface::test</keyword>
+</keywords>
+
+</manpage>
+
+

@@ -1,0 +1,94 @@
+<manpage package="interface" title="interface" id="interface" cat="cmd">
+<namesection>
+<name>interface</name>
+<desc>information about interfaces</desc>
+</namesection>
+
+<synopsis>
+<syntax><cmd>interface</cmd> <m>option</m> ?<m>arg arg ...</m>?</syntax>
+</synopsis>
+
+<section>
+<title>DESCRIPTION</title>
+<p>
+In Tcl "objects" can be created in many ways: in C, in Tcl or in any of the Tcl OO
+extensions. The term object is used loosely here for each compound command: a command with 
+subcommands (methods) that encapsulates a certain functionality. Different kinds of objects
+can often have similar functionality: eg. objects for connecting to different kinds
+of databases would be nicely interchangeable if the would support the same set of methods
+in the same way. In order to let objects easily communicate with each other they have to be 
+able to find out the others functionality.</p>
+<p>
+An interface is a set of (related) methods that provide a predefined 
+functionality.
+An object implements an interface if it supports all the methods in the interface the proper way.
+Of course, one object can support multiple interfaces. It must advertise the interfaces it 
+supports via the "interface" method which has the following form
+<example><cmd>pathName</cmd> interface ?<m>interfaceName</m>?
+</example>
+which  will return a list of all interfaces supported if <m>interfaceName</m> is not given.
+If <m>interfaceName</m> is given and the interface is supported, the supported version of the interface
+is returned. If the interface is not supported, an error is returned.
+</p>
+<p>
+An interface is basically defined by a description of the interface and its methods and a 
+test suite. This is implemented by an object in the interfaces namespace, that supports 
+the <ref manpage="interface_interface">"interface" interface</ref>. (don't you just love self referential definitions?). This interface
+defining object must have a name consisting of the interface name and its version number 
+seperated by a hyphen. It should have a doc method that returns the description of the
+interface in XML format, and a test method that can be used to test a given object for 
+compliance. The test method takes the object to be tested as a first argument, optionally 
+followed by a number of options. These options depend completely on the interface being
+defined, and can be used to provide necesary parameters or to allow the exlusion of certain tests.
+</p>
+</section>
+
+<section>
+<title>THE INTERFACE COMMAND</title>
+<p>
+The <cmd>interface</cmd> command is used to get information about interfaces.
+It can have any of several forms, depending on the <i>option</i> argument:
+</p>
+<commandlist>
+<commanddef>
+<command><cmd>interface</cmd> <method>list</method> ?<m>pattern</m>?</command>
+<desc>Returns a Tcl list whose elements are the available interfaces that match 
+<m>pattern</m> (using the matching rules of <ref manpage="string">string match</ref>).
+If pattern is omitted then the command returns all interfaces. The command returns
+interfaces loaded in the interfaces namespaces, as well as autoloadable interfaces.
+</desc>
+</commanddef>
+<commanddef>
+<command><cmd>interface</cmd> <method>versions</method> <m>interfaceName</m></command>
+<desc>Returns a Tcl list whose elements are the available versions of the interface
+given by <m>interfaceName</m>.
+</desc>
+</commanddef>
+<commanddef>
+<command><cmd>interface</cmd> <method>doc</method> <m>interfaceName</m></command>
+<desc>Returns the documentation of the interface given by <m>interfaceName</m>. If 
+<m>interfaceName</m> does not include a version number (of the form interface-1.0),
+the documentation for the latest available version is returned.
+</desc>
+</commanddef>
+<commanddef>
+<command><cmd>interface</cmd> <method>test</method> <m>interfaceName</m> <m>objectName</m> ?options?</command>
+<desc>tests whether the object <m>objectName</m> fully supports the interface <m>interfaceName</m>.
+The command returns an error if one or more of the tests failed. The options depend completely 
+on the interface being tested, and can be used to provide necesary parameters or to allow the 
+exlusion of certain tests.
+</desc>
+</commanddef>
+</commandlist>
+</section>
+
+<seealso>
+<ref>interface_interface</ref>
+</seealso>
+
+
+<keywords>
+<keyword>interface</keyword>
+</keywords>
+
+</manpage>
