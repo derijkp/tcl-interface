@@ -1,0 +1,174 @@
+
+
+<synopsis>
+<syntax><i>interface</i> <b>option</b> ?<b>arg arg ...</b>?</syntax>
+</synopsis>
+
+
+<h2>DESCRIPTION</h2>
+<p>
+In Tcl "objects" can be created in many ways: in C, in Tcl or in any of the Tcl OO
+extensions. The term object is used loosely here for each compound command: a command with 
+subcommands (methods) that encapsulates a certain functionality. Different kinds of objects
+can often have similar functionality: eg. objects for connecting to different kinds
+of databases would be nicely interchangeable if the would support the same set of methods
+in the same way. In order to let objects easily communicate with each other they have to be 
+able to find out the others functionality.</p>
+<p>
+An interface is a set of (related) methods that provide a predefined functionality.
+An object implements an interface if it supports all the methods in the interface the proper way.
+Of course, one object can support multiple interfaces. It must advertise the interfaces it 
+supports via the "interface" method which has the following form
+<pre><i>pathName</i> interface ?<b>interfaceName</b>?
+</pre>
+which  will return a list of all interfaces supported if <b>interfaceName</b> is not given.
+If <b>interfaceName</b> is given and the interface is supported, the supported version of the interface
+is returned. If the interface is not supported, an error is returned.
+</p>
+<p>
+An interface is basically defined by a description of the interface and its methods and a 
+test suite. This is implemented by an object in the interfaces namespace, that supports 
+the <ref manpage="interface_interface">"interface" interface</ref>. (don't you just love self referential definitions?). This interface
+defining object must have a name consisting of the interface name and its version number 
+seperated by a hyphen. It should have a doc method that returns the description of the
+interface in XML format, and a test method that can be used to test a given object for 
+compliance. The test method takes the object to be tested as a first argument, optionally 
+followed by a number of options. These options depend completely on the interface being
+defined, and can be used to provide necesary parameters or to allow the exlusion of certain tests.
+</p>
+
+
+
+<h2>THE INTERFACE COMMAND</h2>
+<p>
+The <i>interface</i> command is used to get information about interfaces.
+It can have any of several forms, depending on the <i>option</i> argument:
+</p>
+<dl>
+
+<dt><i>interface</i> <i>list</i> ?<b>pattern</b>?</dt>
+<dd>Returns a Tcl list whose elements are the available interfaces that match 
+<b>pattern</b> (using the matching rules of <ref manpage="string">string match</ref>).
+If pattern is omitted then the command returns all interfaces. The command returns
+interfaces loaded in the interfaces namespaces, as well as autoloadable interfaces.
+</dd>
+
+
+<dt><i>interface</i> <i>versions</i> <b>interfaceName</b></dt>
+<dd>Returns a Tcl list whose elements are the available versions of the interface
+given by <b>interfaceName</b>.
+</dd>
+
+
+<dt><i>interface</i> <i>doc</i> <b>interfaceName</b></dt>
+<dd>Returns the documentation of the interface given by <b>interfaceName</b>. If 
+<b>interfaceName</b> does not include a version number (of the form interface-1.0),
+the documentation for the latest available version is returned.
+</dd>
+
+
+<dt><i>interface</i> <i>test</i> <b>interfaceName</b> <b>objectName</b> ?options?</dt>
+<dd>tests whether the object <b>objectName</b> fully supports the interface <b>interfaceName</b>.
+The command returns the number of the tests that failed. The actual errors made are sent to stdout,
+and are available via "interface testsummarize". The options depend completely 
+on the interface being tested, and can be used to provide necesary parameters or to allow the 
+exlusion of certain tests.
+</dd>
+
+
+<dt><i>interface</i> <i>testsummarize</i></dt>
+<dd>Returns a summary of previous "interface test ..." runs, and returns an error if
+some tests failed.
+</dd>
+
+
+<dt><i>interface</i> <i>testclear</i></dt>
+<dd>Clears the results of previous calls to "interface test ...".
+</dd>
+
+</dl>
+
+
+
+<h2>AN INTERFACE IMPLEMENTATION</h2>
+<p>The <a href="interface.html">interface</a> package includes several Tcl commands to easily create an interface
+defining object. Just use these as indicated in the following example:
+<pre>
+proc ::interfaces::<b>interfaceName</b>-<b>version</b> {option args} {
+	<i>interface::implement</i> <b>interfaceName</b> <b>interfaceVersion</b> <b>options</b> \$cmd \$args
+	<i>interface::test</i> <b>desription</b> <b>script</b> <b>result</b> ?<b>arg</b> ...?
+	...
+	<i>interface::testend</i>
+}
+</pre>
+</p>
+<dl>
+
+<dt><i>interface::implement</i> <b>interfaceName</b> <b>interfaceVersion</b> <b>docfile</b> <b>options</b> <b>cmd</b> <b>args</b></dt>
+<dd>implements the basic interface interface. It checks the method called in 
+<b>cmd</b> and returns the appropriate answers to the basic interface methods. If 
+<b>cmd</b> is test, the proc does not return, and the rest of the proc (that contains 
+the tests) is executed. If you want extra options besides the basic interface methods, 
+you should check for these before calling interface::implement. <b>cmd</b> must 
+be the first argument given to the procedure.
+<b>interfaceName</b> and <b>interfaceVersion</b> are the name and the version of the 
+interface to be defined. They should be the same as the those used in the name of the 
+procedure. 
+<b>docfile</b> contains the filename of the xml (tmml) documentation of the interface
+<b>options</b> must be a list consisting of an even number of 
+elements. Each odd-numbered element in this list is treated as an option, and the 
+following element in list is used asdefault value for that option. The options 
+will be made available in the array opt. <b>args</b> contains the resulting arguments 
+given to the proc, and should contain any options set by the caller. 
+</dd>
+
+
+<dt><i>interface::test</i> <b>desription</b> <b>script</b> <b>result</b> ?<b>arg</b> ...?</dt>
+<dd>Test one feature of the interface by running the code in script. This code will have access to the 
+variables 
+<dl>
+<dt>object</dt><dd>object being tested for complience to the interface</dd>
+<dt>opt</dt><dd>array containing options given to the proc</dd>
+<dt>interface</dt><dd>name of interface being tested</dd>
+<dt>version</dt><dd>version of interface being tested</dd>
+</dl>
+<p>
+Some extra arguments <b>arg</b> can be given with the following meaning:
+<dl>
+<dt>error</dt><dd>The test script must cause an error (<b>result</b> must 
+	match the error message returned)</dd>
+<dt>skipon <b>condition</b></dt><dd>The test will be skipped if <b>condition</b> is true</dd>
+<dt>match</dt><dd>use string match instead of == to check whether the
+	pattern <b>result</b> and the result returned by <b>script</b> match</dd>
+<dt>regexp</dt><dd>use regexp instead of == to check whether the pattern 
+	<b>result</b> and the result returned by <b>script</b> match</dd>
+<dt>interface</dt><dd>name of interface being tested</dd>
+<dt>version</dt><dd>version of interface being tested</dd>
+</dl>
+</p>
+</dd>
+
+
+<dt><i>interface::testsummarize</i></dt>
+<dd>should go at the end of the defining proc. Returns an error and an appropriate 
+error message if there were any errors.
+</dd>
+
+</dl>
+
+
+<h2>SEE ALSO</h2><ul>
+<a href="interface_interface.html">interface_interface</a>
+</ul>
+
+
+<h2>KEYWORDS</h2><ul>
+<li>interface</li>
+<li>interface::interface</li>
+<li>interface::implement</li>
+<li>interface::test</li>
+<li>interface::testsummarize</li>
+</ul>
+
+
+

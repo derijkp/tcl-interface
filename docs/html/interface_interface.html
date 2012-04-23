@@ -1,0 +1,57 @@
+
+
+
+<h2>DESCRIPTION</h2>
+An interface (see <a href="interface.html">interface</a>) is defined by a compound command (an object) in the interfaces namespace 
+with a name consisting of the name of the interface and its version number.
+This interface defining object must support the "interface" interface, that basically includes
+returning information about the interface and testing it.
+The interface package contains some commands to easily 
+implement interfaces in Tcl.
+
+
+
+<h2>THE INTERFACE INTERFACE</h2>
+<dl>
+
+<dt><i>objectName</i> <i>doc</i></dt>
+<dd>Returns the documentation of the interface in XML format (TMML).
+</dd>
+
+
+<dt><i>objectName</i> <i>test</i> <b>objectName</b> ?<b>options</b>?</dt>
+<dd>Test whether the given object <b>objectName</b> fully supports the interface.
+The <b>options</b> depend completely on the interface 
+being tested, and can be used to provide necessary parameters or to allow the exclusion of 
+certain tests. Some of these options can be mandatory.
+The command should put information about tests being conducted to stdout. The command must return 
+the number of tests that failed. errors should be logged using the interface::logerror command,
+and skipped tests with the interface::logskip command:
+<dl>
+
+<dt><i>interface::logerror</i> <b>interface</b> <b>description</b> <b>errormessage</b></dt>
+<dd>log an error for a test for the given <b>interface</b></dd>
+
+
+<dt><i>interface::logskip</i> <b>interface</b> <b>description</b> <b>condition</b></dt>
+<dd>log a skipped test for the given <b>interface</b></dd>
+
+</dl>
+</dd>
+
+</dl>
+
+
+<h2>SEE ALSO</h2><ul>
+<a href="interface.html">interface</a>
+</ul>
+
+
+<h2>KEYWORDS</h2><ul>
+<li>interface</li>
+<li>interface_interface</li>
+</ul>
+
+
+
+

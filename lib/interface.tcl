@@ -73,7 +73,8 @@ proc interface::test {description script expected args} {
 		}
 	}
 	if {[info exists options(error)]} {set causeerror 1} else {set causeerror 0}
-	set e "testing $name: $description"
+	if {$testleak} {set temp " ($testleak)"} else {set temp ""}
+	set e "testing$temp $name: $description"
 	if ![info exists ::env(TCL_TEST_ONLYERRORS)] {display $e}
 	set code "upvar object object\nupvar interface interface\nupvar version version\nupvar opt opt\n"
 	append code $script
@@ -212,6 +213,7 @@ proc interface::implement {interface version docfile options cmd arg} {
 			if [info exists opt(-testleak)] {
 				set testleak $opt(-testleak)
 				unset opt(-testleak)
+				puts "testleak $testleak"
 			} else {
 				set testleak 0
 			}
