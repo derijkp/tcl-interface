@@ -1,6 +1,7 @@
 interface
-=========  Tcl interfaces
-           by Peter De Rijk (Universiteit Antwerpen) 
+=========
+  Tcl interfaces
+  by Peter De Rijk (Universiteit Antwerpen) 
 
 What is the interface package
 -----------------------------
@@ -23,13 +24,21 @@ interface in XML format (TMML), and a test method that can be used to test a giv
 compliance. The test method takes the object to be tested as a first argument, optionally 
 followed by a number of options.
 
+You get the man page of the interface commmand at 
+[https://derijkp.github.io/tcl-interface/html/interface.html](https://derijkp.github.io/tcl-interface/html/interface.html)
+and a definition of the interface interface at 
+[https://derijkp.github.io/tcl-interface/html/interface_interface.html](https://derijkp.github.io/tcl-interface/html/interface_interface.html)
+
 Installation
 ------------
 You should be able to obtain the latest version of interface via www on url
-http://tcl-dbi.sourceforge.net/interface/
+https://github.com/derijkp/tcl-interface
 
-Compiled packages should be created using the following steps in the package directory:
-(You can also build in any other directory, if you change the path to the configure command)
+The extension can be installed using the command:
+./build/install_simple.tcl <installdir>
+where <installdir> is the directory in which the package will be installed (should be visisble to Tcl)
+
+You can also use the configure method typical for installing Tcl packages (but not neccessary as it does not contain a compiled component)
 ./configure
 make
 make install
@@ -44,15 +53,12 @@ However, the development of interface is not my only task,
 which is why my response might not be always as fast as you would
 like.
 
+Peter.DeRijk@uantwerpen.be
+
 Peter De Rijk
-University of Antwerp (UA)
-Department of Biochemistry
+VIB - UAntwerp Center for Molecular Neurology
 Universiteitsplein 1
 B-2610 Antwerp
-
-tel.: 32-03-820.23.27
-fax: 32-03-820.22.48
-E-mail: Peter.DeRijk@ua.ac.be
 
 Legalities
 ----------

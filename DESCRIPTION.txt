@@ -1,8 +1,8 @@
 Identifier: interface
 Version: 1.0.0
 Title: interface
-Creator: Peter De Rijk <Peter.DeRijk@ua.ac.be>
+Creator: Peter De Rijk <Peter.DeRijk@uantwerpen.be>
 Description: generic interfaces for Tcl
 Rights: BSD
-URL: http://tcl-dbi.sourceforge.net/
+URL: https://github.com/derijkp/tcl-interface
 Subject: interface
